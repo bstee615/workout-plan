@@ -8,7 +8,7 @@ const UserWorkoutTracker = ({ username, color }) => {
     useEffect(() => {
         const createHubConnection = async () => {
             const hubConnect = new SignalR.HubConnectionBuilder()
-                .withUrl('http://localhost:5190/workout') // replace with your server URL
+                .withUrl(process.env.PUBLIC_URL + 'hub')
                 .withAutomaticReconnect()
                 .build();
 

@@ -15,7 +15,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && mv build/* ../wwwroot && rm -rf build",
+    "build-wwwroot": "react-scripts build && mv build/* ../wwwroot && rm -rf build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

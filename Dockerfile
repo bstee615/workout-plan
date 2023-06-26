@@ -5,24 +5,45 @@ FROM node:14 AS build-stage
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY workout-tracker/package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the current directory contents into the container
-COPY . .
+COPY workout-tracker .
+
+ENV PUBLIC_URL http://home.benjijang.com/workout/
 
 # Build the app
 RUN npm run build
 
-# Use an official .NET runtime for the runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime-stage
+# build dotnet part
+# Use the .NET SDK as the build stage
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-dotnet-stage
 
 WORKDIR /app
 
-# Copy the build output from the build stage
-COPY --from=build-stage /app/build ./build
+# Copy the project file and restore dependencies
+COPY *.csproj ./
+RUN dotnet restore
 
-# Run the app
-ENTRYPOINT ["dotnet", "run"]
+# Copy the rest of the source code
+COPY . .
+
+# Build the application
+RUN dotnet build -c Release --no-restore
+
+# Publish the application
+RUN dotnet publish -c Release --no-restore --output ./build
+
+# Use an official .NET runtime for the runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime-stage
+
+WORKDIR /app
+
+COPY --from=build-stage /app/build ./wwwroot
+COPY --from=build-dotnet-stage /app/build ./build
+
+# Set the command to run the application
+CMD ["dotnet", "./build/WorkoutTrackerBackend.dll"]

@@ -5,7 +5,7 @@ void ConfigureServices(IServiceCollection services)
     services.AddCors(options =>
     {
         options.AddPolicy("CorsPolicy",
-            builder => builder.WithOrigins("http://localhost:3000")
+            builder => builder.WithOrigins("http://localhost", "http://localhost:5555", "http://home.benjijang.com")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());
@@ -28,7 +28,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseDefaultFiles(); // serves index.html as the default page
 app.UseStaticFiles();  // enables serving static files
 
@@ -38,14 +37,11 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-// public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-// {
 app.UseCors("CorsPolicy");
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<WorkoutHub>("/workout");
+    endpoints.MapHub<WorkoutHub>("/hub");
 });
-// }
 
 app.Run();
