@@ -1,0 +1,30 @@
+# .gitignore for C#
+
+# Build artifacts
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+wwwroot/
+
+# Visual Studio files
+.vs/
+*.sln
+*.suo
+*.csproj.user
+
+# Package files
+*.nuget.props
+*.nuget.targets
+*.user
+
+# macOS
+.DS_Store
+
+# Logs and debugging files
+*.log
+
+# Environment variables
+*.env
+*.env.user
